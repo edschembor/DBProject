@@ -1,19 +1,22 @@
 <?php
 
-include 'conf.php';
-include 'open.php';
+//include 'conf.php';
+//include 'open.php';
 
-$dbhost = 'dbase.cs.jhu.edu:3306';
+$dbhost = 'dbase.cs.jhu.edu';
 $dbuser = 'cs41515_vamaral1';
 $dbpass = 'TOYNJAAE';
 
 // Create connection
-$conn = new mysqli($dbhost, $dbuser, $dbpass);
+$conn = mysql_connect($dbhost, $dbuser, $dbpass);
 // Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-} 
+if (!$conn) {
+    die("Connection failed");
+}
 
+$db  = mysql_select_db("cs41515_vamaral1_db", $conn);
+
+/*
 // Create database
 $sql = "
 DROP TABLE Rawscores;
@@ -49,11 +52,16 @@ create table Passwords (
 INSERT INTO Passwords VALUES ('OpenSesame');
 INSERT INTO Passwords VALUES ('GuessMe');
 INSERT INTO Passwords VALUES ('ImTheTA');
-";
-if ($conn->query($sql) === TRUE) {
-    echo "Database created successfully";
-} else {
-    echo "Error creating database: " . $conn->error;
+";*/
+
+$sql = "SELECT * FROM Rawscores";
+$result = mysql_query($sql);
+//if(!$result) {
+//	echo mysql_error();
+//}
+while ($row = mysql_fetch_array($result)) {
+   echo "blah";
 }
 
+mysql_close($conn);
 ?>
