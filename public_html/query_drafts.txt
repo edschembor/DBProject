@@ -1,0 +1,72 @@
+SQL Queries
+
+Query A:
+
+CREATE PROCEDURE ShowRawScores(IN ssn INT)
+BEGIN
+    SELECT * FROM rawscores as R WHERE R.SSN = ssn;
+END;
+
+
+Query B:
+
+CREATE PROCEDURE ShowPercentages(IN ssn INT)
+BEGIN
+    (SELECT ((R.HW1/R2.HW1)*100), ((R.HW2a/R2.HW2a)*100), ((R.HW2b/R2.HW2b)*100), ((R.Midterm/R2.Midterm)*100), ((R.HW3/R2.HW3)*100), ((R.Exam/R2.Exam)*100) FROM rawscore as R, rawscore as R2 WHERE R.SSN = ssn and R2.SSN = "0001") union (SELECT (R.HW1*(1/Total.HW1)*Weight.HW1)+(R.HW2a*(1/Total.HW2a)*Weight.HW2a) +(R.HW2b*(1/Total.HW2b)*Weight.HW2b)+(R.Midterm*(1/Total.Midterm)*Weight.Midterm)+(R.HW1*(1/Total.HW1)*Weight.HW1)+(R.HW1*(1/Total.HW1)*Weight.HW1) FROM rawscore as R, rawscore as Total, rawscore as Weight WHERE R.SSN = ssn and Total.SSN = "0001" and Weight.SSN = "0002");
+END;
+
+
+Query C:
+
+CREATE PROCEDURE AllRawScores(IN pass VARCHAR(20))
+BEGIN
+    DECLARE cur CURSOR FOR
+        SELECT * FROM rawscores as R, Passwords as P WHERE P.CurPasswords = pass and R.SSN != "0001" and R.SSN != "0002";
+		
+	DECLARE EXIT HANDLER FOR NOT FOUND
+	    SELECT "Sorry, incorrect password." AS "Error Message";
+		
+	OPEN cur;
+	CLOSE cur;
+	
+END;
+
+Query D:
+
+CREATE PROCEDURE AllPercentages(IN pass VARCHAR(20))
+BEGIN
+    DECLARE our CURSOR FOR
+	        (SELECT ((R.HW1/R2.HW1)*100), ((R.HW2a/R2.HW2a)*100), ((R.HW2b/R2.HW2b)*100), ((R.Midterm/R2.Midterm)*100), ((R.HW3/R2.HW3)*100), ((R.Exam/R2.Exam)*100) FROM rawscore as R, rawscore as R2 WHERE R.SSN = ssn and R2.SSN = "0001") union (SELECT (R.HW1*(1/Total.HW1)*Weight.HW1)+(R.HW2a*(1/Total.HW2a)*Weight.HW2a) +(R.HW2b*(1/Total.HW2b)*Weight.HW2b)+(R.Midterm*(1/Total.Midterm)*Weight.Midterm)+(R.HW1*(1/Total.HW1)*Weight.HW1)+(R.HW1*(1/Total.HW1)*Weight.HW1) FROM rawscore as R, rawscore as Total, rawscore as Weight WHERE Total.SSN = "0001" and Weight.SSN = "0002");
+		
+	DECLARE EXIT HANDLER FOR NOT FOUND
+	    SELECT "Sorry, incorrect password." AS "Error Message";
+
+
+Query E:
+
+CREATE PROCEDURE Stats()
+BEGIN
+    SELECT sum(HW1)/count(HW1), sum(HW2a)/count(HW2a), sum(HW2b)/count(HW2b), sum(Midterm)/count(Midterm), sum(HW3)/count(HW3), sum(FExam)/count(FExam), sum(CumAvg)/count(CumAvg) FROM rawscore;
+	
+	
+END;
+
+
+Query F:
+
+CREATE PROCEDURE ChangeScores(IN pass VARCHAR(20), IN ssn INT, IN assignmentName VARCHAR(20), IN newVal DOUBLE)
+BEGIN
+    SELECT....
+	
+	DECLARE EXIT HANDLER FOR NOT FOUND
+	    SELECT "Sorry, incorrect password."
+END;
+
+
+
+Create Procedure ProcedureName()
+....
+
+Call Procedure
+
+Use Case statement
