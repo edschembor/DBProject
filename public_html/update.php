@@ -21,8 +21,7 @@ if (!$conn) {
   $new_score = $_POST['new_score'];
 
   mysql_select_db("cs41515_vamaral1_db", $conn);
-  //$result = mysql_query("CALL UpdateMidterm({$pass}, {$ssn}, {$new_score});") or die(mysql_error()); 
-  $result = mysql_query("CALL UpdateMidterm(".$pass."," .$ssn."," .$new_score.");") or die(mysql_error()); 
+  $result = mysql_query("CALL UpdateMidterm('".$pass."'," .$ssn."," .$new_score.");") or die(mysql_error()); 
   if (!$result) {
 
     echo "Query failed!\n";
