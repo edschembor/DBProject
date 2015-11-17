@@ -2,34 +2,43 @@ SQL Queries
 
 Query A:
 
+DELIMITER //
+DROP PROCEDURE IF EXISTS ShowRawScores;
 CREATE PROCEDURE ShowRawScores(IN ssn INT)
 BEGIN
-    SELECT * FROM rawscores as R WHERE R.SSN = ssn;
-END;
+    SELECT * FROM Rawscores as R WHERE R.SSN = ssn;
+END//
+DELIMITER ;
 
 
 Query B:
 
+DELIMITER //
+DROP PROCEDURE IF EXISTS ShowPercentages;
 CREATE PROCEDURE ShowPercentages(IN ssn INT)
 BEGIN
-    (SELECT ((R.HW1/R2.HW1)*100), ((R.HW2a/R2.HW2a)*100), ((R.HW2b/R2.HW2b)*100), ((R.Midterm/R2.Midterm)*100), ((R.HW3/R2.HW3)*100), ((R.Exam/R2.Exam)*100) FROM rawscore as R, rawscore as R2 WHERE R.SSN = ssn and R2.SSN = "0001") union (SELECT (R.HW1*(1/Total.HW1)*Weight.HW1)+(R.HW2a*(1/Total.HW2a)*Weight.HW2a) +(R.HW2b*(1/Total.HW2b)*Weight.HW2b)+(R.Midterm*(1/Total.Midterm)*Weight.Midterm)+(R.HW1*(1/Total.HW1)*Weight.HW1)+(R.HW1*(1/Total.HW1)*Weight.HW1) FROM rawscore as R, rawscore as Total, rawscore as Weight WHERE R.SSN = ssn and Total.SSN = "0001" and Weight.SSN = "0002");
-END;
-
+    (SELECT ((R.HW1/R2.HW1)*100), ((R.HW2a/R2.HW2a)*100), ((R.HW2b/R2.HW2b)*100), ((R.Midterm/R2.Midterm)*100), ((R.HW3/R2.HW3)*100), ((R.FExam/R2.FExam)*100) FROM Rawscores as R, Rawscores as R2 WHERE R.SSN = 9176 and R2.SSN = "0001") 
+    union 
+    (SELECT (R.HW1*(1/Total.HW1)*Weight.HW1)+(R.HW2a*(1/Total.HW2a)*Weight.HW2a) +(R.HW2b*(1/Total.HW2b)*Weight.HW2b)+(R.Midterm*(1/Total.Midterm)*Weight.Midterm)+(R.HW3*(1/Total.HW3)*Weight.HW3)+(R.FExam*(1/Total.FExam)*Weight.FExam) 
+    FROM Rawscores as R, Rawscores as Total, Rawscores as Weight WHERE R.SSN = 9176 and Total.SSN = "0001" and Weight.SSN = "0002");
+END//
+DELIMITER ;
 
 Query C:
 
+DELIMITER //
+DROP PROCEDURE IF EXISTS AllRawScores;
 CREATE PROCEDURE AllRawScores(IN pass VARCHAR(20))
 BEGIN
-    DECLARE cur CURSOR FOR
-        SELECT * FROM rawscores as R, Passwords as P WHERE P.CurPasswords = pass and R.SSN != "0001" and R.SSN != "0002";
-		
+    DECLARE cur CURSOR FOR(
+        SELECT * FROM Rawscores as R, Passwords as P WHERE P.CurPasswords = pass and R.SSN <> 0001 and R.SSN <> 0002
+        );
 	DECLARE EXIT HANDLER FOR NOT FOUND
-	    SELECT "Sorry, incorrect password." AS "Error Message";
-		
+	    SELECT "Sorry, incorrect password." AS "Error Message";	
 	OPEN cur;
-	CLOSE cur;
-	
-END;
+	CLOSE cur;	
+END//
+DELIMITER ;
 
 Query D:
 
