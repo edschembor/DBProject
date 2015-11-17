@@ -24,24 +24,24 @@ if (!$conn) {
   $num = mysql_numrows($result);
   if($num < 1) {
     echo "Invalid Password!\n";
-  }
-  $query = mysql_query("SELECT * FROM Rawscores WHERE Rawscores.SSN <> 0001 AND Rawscores.SSN <> 0002;") or die(mysql_error()); 
-  if (!$query) {
-
-    echo "Query failed!\n";
-    print mysql_error();
-
   } else {
+    $query = mysql_query("SELECT * FROM Rawscores WHERE Rawscores.SSN <> 0001 AND Rawscores.SSN <> 0002;") or die(mysql_error()); 
+    if (!$query) {
 
-    echo "<table border=1>\n";
-    echo "<tr><td>SSN</td><td>LName</td><td>FName</td><td>Section</td><td>HW1</td><td>HW2a</td><td>HW2b</td><td>Midterm</td><td>HW3</td><td>FExam</td></tr>\n";
+      echo "Query failed!\n";
+      print mysql_error();
 
-    while ($myrow = mysql_fetch_array($query)) {
-      printf("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>\n", $myrow["SSN"], $myrow["LName"], $myrow["FName"], $myrow["Section"], $myrow["HW1"], $myrow["HW2a"], $myrow["HW2b"], $myrow["Midterm"], $myrow["HW3"], $myrow["FExam"]);
+    } else {
+
+      echo "<table border=1>\n";
+      echo "<tr><td>SSN</td><td>LName</td><td>FName</td><td>Section</td><td>HW1</td><td>HW2a</td><td>HW2b</td><td>Midterm</td><td>HW3</td><td>FExam</td></tr>\n";
+
+      while ($myrow = mysql_fetch_array($query)) {
+        printf("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>\n", $myrow["SSN"], $myrow["LName"], $myrow["FName"], $myrow["Section"], $myrow["HW1"], $myrow["HW2a"], $myrow["HW2b"], $myrow["Midterm"], $myrow["HW3"], $myrow["FExam"]);
+      }
+
+      echo "</table>\n";
     }
-
-    echo "</table>\n";
-
   }
 }
 
