@@ -17,16 +17,15 @@ if (!$conn) {
 } else {
 
   $pass = $_POST['password'];
-  $ssn = $_POST['ssn'];
-  $new_score = $_POST['new_score'];
 
   mysql_select_db("cs41515_vamaral1_db", $conn);
-  $result = mysql_query("SELECT * FROM Passwords WHERE Passwords.CurrPasswords = password;") or die(mysql_error()); 
+  $result = mysql_query("SELECT * FROM Passwords WHERE CurPasswords = '".$pass."';") or die(mysql_error()); 
+  
   $num = mysql_numrows($result);
-  if(num < 1) {
+  if($num < 1) {
     echo "Invalid Password!\n";
   }
-  $query = mysql_query(" SELECT * FROM Rawscores WHERE Rawscores.SSN <> 0001 AND Rawscores.SSN <> 0002 ORDER BY Section, LName, FName;") or die(mysql_error()); 
+  $query = mysql_query("SELECT * FROM Rawscores WHERE Rawscores.SSN <> 0001 AND Rawscores.SSN <> 0002;") or die(mysql_error()); 
   if (!$query) {
 
     echo "Query failed!\n";
