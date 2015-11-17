@@ -143,7 +143,7 @@ DELIMITER //
 DROP PROCEDURE IF EXISTS UpdateMidterm;
 CREATE PROCEDURE UpdateMidterm(IN pass VARCHAR(20), IN ssn INT, IN newVal DOUBLE)
 BEGIN
-IF EXISTS(SELECT CurPasswords FROM Passwords WHERE CurPasswords = pass) THEN
+IF EXISTS(SELECT CurPasswords FROM Passwords WHERE CurPasswords = pass) AND EXISTS(SELECT * FROM Rawscores as R WHERE R.SSN = ssn and R.SSN <> "0001" and R.SSN <> "0002") THEN
 	SET @sql = CONCAT('UPDATE Rawscores SET Rawscores.Midterm = ', newVal, ' WHERE Rawscores.SSN = ', ssn, ';');
   	PREPARE stmt FROM @sql;
   	EXECUTE stmt;
@@ -151,7 +151,7 @@ IF EXISTS(SELECT CurPasswords FROM Passwords WHERE CurPasswords = pass) THEN
   	SELECT * FROM Rawscores as R, Passwords as P WHERE P.CurPasswords = pass and R.SSN <> 0001 and R.SSN <> 0002;
 ELSE
     BEGIN
-	SELECT "Password Incorrect";
+	SELECT "Password or SSN Incorrect";
 	END;
 END IF;
 END//
