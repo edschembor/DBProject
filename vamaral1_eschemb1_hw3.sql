@@ -23,7 +23,7 @@ DELIMITER //
 DROP PROCEDURE IF EXISTS ShowPercentages;
 CREATE PROCEDURE ShowPercentages(IN ssn INT)
 BEGIN
-IF EXISTS(SELECT * FROM Rawscores as R WHERE R.SSN = ssn) THEN
+IF EXISTS(SELECT * FROM Rawscores as R WHERE R.SSN = ssn and R.SSN <> "0001" and R.SSN <> "0002") THEN
     BEGIN
 	SELECT (R.HW1*((1/R2.HW1)*Weight.HW1)+(R.HW2a*(1/R2.HW2a)*Weight.HW2a) +(R.HW2b*(1/R2.HW2b)*Weight.HW2b)+(R.Midterm*(1/R2.Midterm)*Weight.Midterm)+(R.HW3*(1/R2.HW3)*Weight.HW3)+(R.FExam*(1/R2.FExam)*Weight.FExam))*100 as WeightedAvg, ((R.HW1/R2.HW1)*100) as HW1, ((R.HW2a/R2.HW2a)*100) as HW2a, ((R.HW2b/R2.HW2b)*100) as HW2b, ((R.Midterm/R2.Midterm)*100) as Midterm, ((R.HW3/R2.HW3)*100) as HW3, ((R.FExam/R2.FExam)*100) as Final FROM Rawscores as R, Rawscores as R2, Rawscores as Weight WHERE R.SSN = ssn and R2.SSN = "0001" and Weight.SSN = "0002";
 	END;
