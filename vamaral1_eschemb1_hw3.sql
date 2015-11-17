@@ -118,7 +118,7 @@ DELIMITER //
 DROP PROCEDURE IF EXISTS ChangeScores;
 CREATE PROCEDURE ChangeScores(IN pass VARCHAR(20), IN ssn INT, IN assignmentName VARCHAR(20), IN newVal DOUBLE)
 BEGIN
-IF EXISTS(SELECT CurPasswords FROM Passwords WHERE CurPasswords = pass) THEN
+IF EXISTS(SELECT CurPasswords FROM Passwords WHERE CurPasswords = pass) AND EXISTS(SELECT * FROM Rawscores as R WHERE R.SSN = ssn and R.SSN <> "0001" and R.SSN <> "0002") THEN
     BEGIN
 	SELECT * FROM Rawscores as R, Passwords as P WHERE P.CurPasswords = pass and R.SSN <> 0001 and R.SSN <> 0002;
 	SET @sql = CONCAT('UPDATE Rawscores SET ', assignmentName, ' = ', newVal, ' WHERE Rawscores.SSN = ', ssn, ';');
@@ -129,7 +129,7 @@ IF EXISTS(SELECT CurPasswords FROM Passwords WHERE CurPasswords = pass) THEN
 	END;
 ELSE
     BEGIN
-	SELECT "Password Incorrect";
+	SELECT "Password or SSN Incorrect";
 	END;
 END IF;
 END//
