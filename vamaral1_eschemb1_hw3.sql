@@ -4,7 +4,7 @@ DELIMITER //
 DROP PROCEDURE IF EXISTS ShowRawScores;
 CREATE PROCEDURE ShowRawScores(IN ssn INT)
 BEGIN
-IF EXISTS(SELECT * FROM Rawscores as R WHERE R.SSN = ssn) THEN
+IF EXISTS(SELECT * FROM Rawscores as R WHERE R.SSN = ssn and R.SSN <> "0001" and R.SSN <> "0002") THEN
     BEGIN
 	SELECT * FROM Rawscores as R WHERE R.SSN = ssn;
 	END;
